@@ -23,11 +23,23 @@ class FPlayer extends FBox {
   }
   
   public void jump() {
-    this.setVelocity(0, -jumpStrength);
-    this.setAngularVelocity(PI);
+    this.setVelocity(0, isGravityFlipped ? jumpStrength : -jumpStrength);
+    this.setAngularVelocity(isGravityFlipped ? -PI : PI);
   }
   
   public boolean isGrounded() {
-    return this.getContacts().size() != 0;
+    if(this.getContacts().size() == 0) {
+      return false;
+    } else if(contactsContainsPortal()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  private boolean contactsContainsPortal() {
+    for(Object c : this.getContacts()) {
+      if(((FContact) c).contains("portal")) return true;
+    }
+    return false;
   }
 }

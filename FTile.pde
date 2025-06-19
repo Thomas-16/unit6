@@ -1,7 +1,7 @@
 class FTile extends FBox {
   
-  public FTile(float size) {
-    super(size, size);
+  public FTile(float width, float height) {
+    super(width, height);
     
     this.setStroke(0, 0, 0, 0);
     this.setStatic(true);
