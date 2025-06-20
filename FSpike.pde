@@ -1,9 +1,9 @@
 class FSpike extends FTile {
   
-  public FSpike(float width, float height, PImage image) {
+  public FSpike(float width, float height, PImage image, boolean isFlipped) {
     super(width, height);
     
-    this.attachImage(image);
+    this.attachImage(isFlipped ? flipImage(image) : image);
     this.setName("spike");
   }
   

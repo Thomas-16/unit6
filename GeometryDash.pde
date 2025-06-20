@@ -7,10 +7,18 @@ import fisica.*;
 color TRANSPARENT = color(0,0,0,0);
 color GROUND = #2f3699;
 color SPIKE = #ed1c24;
+color SPIKEFLIPPED = #ff6978;
 color REGBLOCK1 = #00f094;
 color REGBLOCK1FLIPPED = #00e0f0;
 color BLOCK8 = #7dbf7a;
+color BLOCK13 = #6b4200;
+color BLOCK14 = #ff00ae;
+color BLOCK5 = #0062ff;
+color BLOCK11 = #ffa8f8;
+color BLOCK12 = #a978ff;
+
 color PIT = #ff7e00;
+color PITFLIPPED = #5c5c5c;
 color PORTAL = #d400ff;
 
 PImage mapImg;
@@ -28,6 +36,12 @@ PImage block3Img;
 PImage block5Img;
 PImage block7Img;
 PImage block8Img;
+PImage block9Img;
+PImage block10Img;
+PImage block11Img;
+PImage block12Img;
+PImage block13Img;
+PImage block14Img;
 PImage[] pitImgs;
 
 FPlayer player;
@@ -55,7 +69,7 @@ int lastPortalFlipTime;
 boolean spaceKeyDown;
 
 final int tileSize = 60;
-final int groundTileSize = tileSize*4;
+final int groundTileSize = tileSize * 4;
 
 void setup() {
   size(1800, 1000, P2D);
@@ -75,6 +89,12 @@ void setup() {
   block5Img = scaleImage(loadImage("GridBlock05.png"), tileSize, tileSize);
   block7Img = scaleImage(loadImage("GridBlock07.png"), tileSize, tileSize);
   block8Img = scaleImage(loadImage("GridBlock08.png"), tileSize, tileSize);
+  block9Img = scaleImage(loadImage("GridBlock09.png"), tileSize, tileSize);
+  block10Img = scaleImage(loadImage("GridBlock10.png"), tileSize, tileSize);
+  block11Img = scaleImage(loadImage("GridBlock11.png"), tileSize, tileSize);
+  block12Img = scaleImage(loadImage("GridBlock12.png"), tileSize, tileSize);
+  block13Img = scaleImage(loadImage("GridBlock13.png"), tileSize, tileSize);
+  block14Img = scaleImage(loadImage("GridBlock14.png"), tileSize, tileSize);
   pitImgs = new PImage[] { 
     scaleImage(loadImage("ThornPit01.png"), tileSize, tileSize), 
     scaleImage(loadImage("ThornPit02.png"), tileSize, tileSize), 
@@ -187,9 +207,13 @@ void updateTiles() {
             continue;
           }
           if(c == SPIKE) {
-            tile = new FSpike(tileSize * 0.7, tileSize/3, spikeImg);
+            tile = new FSpike(tileSize * 0.7, tileSize/3, spikeImg, false);
+          } else if(c == SPIKEFLIPPED) {
+            tile = new FSpike(tileSize * 0.7, tileSize/3, spikeImg, true);
           } else if(c == PIT) {
-            tile = new FPit(tileSize, tileSize/3, pitImgs);
+            tile = new FPit(tileSize, tileSize/3, pitImgs, false);
+          } else if(c == PITFLIPPED) {
+            tile = new FPit(tileSize, tileSize/3, pitImgs, true);
           } else if(c == PORTAL) {
             for(FPortal portal : portals) {
               // if a portal already exists there
@@ -211,6 +235,21 @@ void updateTiles() {
           } else if(c == BLOCK8) {
             tile = new FTile(tileSize, tileSize);
             tile.attachImage(block8Img);
+          } else if(c == BLOCK13) {
+            tile = new FTile(tileSize, tileSize);
+            tile.attachImage(block13Img);
+          } else if(c == BLOCK14) {
+            tile = new FTile(tileSize, tileSize);
+            tile.attachImage(block14Img);
+          } else if(c == BLOCK5) {
+            tile = new FTile(tileSize, tileSize);
+            tile.attachImage(block5Img);
+          } else if(c == BLOCK11) {
+            tile = new FTile(tileSize, tileSize);
+            tile.attachImage(block11Img);
+          } else if(c == BLOCK12) {
+            tile = new FTile(tileSize, tileSize);
+            tile.attachImage(block12Img);
           }
           else {
             println("invalid tile colour");
