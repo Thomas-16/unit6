@@ -1,10 +1,13 @@
 class FPlayer extends FBox {
   private final int jumpStrength = 1150;
+  private final int jumpPadJumpStrength = 1800;
   private int xPos;
+  private int lastJumpTime;
   
   public FPlayer(int x, int y, float w, float h, PImage playerImg) {
     super(w, h);
     this.xPos = x;
+    this.lastJumpTime = 0;
     
     this.setPosition(x, y);
     this.attachImage(playerImg);
@@ -23,7 +26,14 @@ class FPlayer extends FBox {
   }
   
   public void jump() {
-    this.setVelocity(0, isGravityFlipped ? jumpStrength : -jumpStrength);
+    if(millis() - lastJumpTime > 300) {
+      this.setVelocity(0, isGravityFlipped ? jumpStrength : -jumpStrength);
+      this.setAngularVelocity(isGravityFlipped ? -PI : PI);
+      lastJumpTime = millis();
+    }
+  }
+  public void jumpPadJump() {
+    this.setVelocity(0, isGravityFlipped ? jumpPadJumpStrength : -jumpPadJumpStrength);
     this.setAngularVelocity(isGravityFlipped ? -PI : PI);
   }
   

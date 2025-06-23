@@ -1,7 +1,7 @@
 import fisica.*;
 
 // TODOS:
-// 
+// jump orb
 
 // colors
 color TRANSPARENT = color(0,0,0,0);
@@ -20,6 +20,7 @@ color BLOCK12 = #a978ff;
 color PIT = #ff7e00;
 color PITFLIPPED = #5c5c5c;
 color PORTAL = #d400ff;
+color JUMPPAD = #e054ff;
 
 PImage mapImg;
 PImage playerImg;
@@ -27,6 +28,7 @@ PImage backgroundImg;
 PImage groundTileImg;
 PImage spikeImg;
 PImage portalImg;
+PImage jumpPadImg;
 
 PImage regBlock1Img;
 PImage regBlock1FlippedImg;
@@ -49,6 +51,7 @@ FWorld world;
 FTile[][] tiles;
 ArrayList<FTile> groundTiles;
 ArrayList<FPortal> portals;
+ArrayList<FJumpPad> jumpPads;
 
 final float groundY = 900;
 int groundStartIdx;      
@@ -101,6 +104,7 @@ void setup() {
     scaleImage(loadImage("ThornPit03.png"), tileSize, tileSize)
   };
   portalImg = scaleImage(loadImage("CubePortal.png"), int(186 * 0.75), int(339 * 0.75));
+  jumpPadImg = scaleImage(loadImage("YellowJumpPad.png"), 50, 50);
   
   setupScene();
 }
@@ -129,6 +133,7 @@ void setupScene() {
   }
   
   portals = new ArrayList<FPortal>();
+  jumpPads = new ArrayList<FJumpPad>();
   
   player = new FPlayer(400, 12*60, tileSize, tileSize, playerImg);
   world.add(player);
@@ -169,6 +174,9 @@ void handlePlayerCollisions() {
     }
     if(c.contains("portal")) {
       return;
+    }
+    if(c.contains("jumppad")) {
+      player.jumpPadJump();
     }
 
     // normal vector of collision
@@ -225,6 +233,18 @@ void updateTiles() {
             FPortal portal = new FPortal(x, y, 186 * 0.75, portalImg);
             portals.add(portal);
             world.add(portal);
+            continue;
+          } else if(c == JUMPPAD) {
+            for(FJumpPad jumpPad : jumpPads) {
+              // if a jump pad already exists there
+              if(jumpPad.getMapX() == x && jumpPad.getMapY() == y) {
+                continue maploop;
+              }
+            }
+            
+            FJumpPad jumpPad = new FJumpPad(x, y, tileSize, jumpPadImg);
+            jumpPads.add(jumpPad);
+            world.add(jumpPad);
             continue;
           } else if(c == REGBLOCK1) {
             tile = new FTile(tileSize, tileSize);
@@ -311,6 +331,10 @@ void updateObjects() {
   for(FPortal portal : portals) {
     portal.update();
   }
+  for(FJumpPad jumpPad : jumpPads) {
+    jumpPad.update();
+  }
+  
   ArrayList<Integer> portalsToRemove = new ArrayList<Integer>();
   for(int i = 0; i < portals.size(); i++) {
     if(portals.get(i).getX() < -100) {
@@ -321,6 +345,18 @@ void updateObjects() {
     FPortal portalToRemove = portals.get(portalsToRemove.get(i) - i);
     world.removeBody(portalToRemove);
     portals.remove(portalToRemove);
+  }
+  
+  ArrayList<Integer> jumpPadsToRemove = new ArrayList<Integer>();
+  for(int i = 0; i < jumpPads.size(); i++) {
+    if(jumpPads.get(i).getX() < -100) {
+      jumpPadsToRemove.add(i);
+    }
+  }
+  for(int i = 0; i < jumpPadsToRemove.size(); i++) {
+    FJumpPad jumpPadToRemove = jumpPads.get(jumpPadsToRemove.get(i) - i);
+    world.removeBody(jumpPadToRemove);
+    jumpPads.remove(jumpPadToRemove);
   }
 }
 void handleGravity() {
