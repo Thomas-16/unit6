@@ -296,22 +296,19 @@ void updateGroundTiles() {
     float xPos = (groundStartIdx + i) * groundTileSize + groundTileSize/2 + worldOffset;
     groundTiles.get(i).setPosition(xPos, groundY);
   }
+  
+  float leftTileScreenX = (groundStartIdx) * groundTileSize + groundTileSize/2 + worldOffset;
+  while(leftTileScreenX + groundTileSize/2 < 0) {
+    FTile t = groundTiles.remove(0);
+    groundStartIdx++;
 
-  while (true) {
-    float leftTileScreenX = (groundStartIdx) * groundTileSize + groundTileSize/2 + worldOffset;
+    int nextTileIdx = groundStartIdx + groundTiles.size(); // index for new right-most tile
+    float newX = nextTileIdx*groundTileSize + groundTileSize/2 + worldOffset;
 
-    if (leftTileScreenX + groundTileSize/2 < 0) { 
-      FTile t = groundTiles.remove(0);
-      groundStartIdx++;
-
-      int nextTileIdx = groundStartIdx + groundTiles.size(); // index for new right-most tile
-      float newX = nextTileIdx*groundTileSize + groundTileSize/2 + worldOffset;
-
-      t.setPosition(newX, groundY);  // move to end
-      groundTiles.add(t);
-    } else {
-      break;
-    }
+    t.setPosition(newX, groundY);  // move to end
+    groundTiles.add(t);
+      
+    leftTileScreenX = (groundStartIdx) * groundTileSize + groundTileSize/2 + worldOffset;
   }
 }
 
